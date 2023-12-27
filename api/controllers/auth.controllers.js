@@ -50,3 +50,33 @@ export const signin = async (req, res, next) => {
     next(error);
   }
 }
+
+export const google = async (req, res, next) => {
+  const {email, name, photoURL } = req.body;
+  try {
+    const user = await User.findOne({email});
+    if(user){
+      const token = jwt.sign({id: user._id}, process.env.jwt_secretkey);
+      const { password, ...rest } = user._doc;
+      res.status(200).cookie("access_token", token, {
+        httpOnly: true,
+      }).json(rest);
+    }else{
+      const random_password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+      const newUser = new User({
+        username: name.toLowerCase().split(" ").join("") + Math.random().toString(9).slice(-4),
+        email,
+        password: random_password,
+        photoURL: photoURL
+      });
+      await newUser.save();
+      const token = jwt.sign({id: newUser._id}, process.env.jwt_secretkey);
+      const { password, ...rest } = newUser._doc;
+      res.status(200).cookie('access_token', token, {
+        httpOnly: true
+      }).json(rest);
+    }
+  } catch (error) {
+    next(error)
+  }
+}
