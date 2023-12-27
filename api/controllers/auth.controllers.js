@@ -1,6 +1,7 @@
 import { errorHandler } from "../Utils/errors.js";
 import User from "../models/user.model.js";
 import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export const signup = async (req, resp, next) => {
   const {username, email, password} = req.body;
@@ -16,14 +17,36 @@ export const signup = async (req, resp, next) => {
     password: hashedPassword
   });
 
-
-
   try {
     await newUser.save();
     resp.json({message: "signup successful"})
   } catch (error) {
     next(error);
   }
+}
 
+export const signin = async (req, res, next) => {
+  const { email, password } = req.body;
+  if(!(!!email && !!password)){
+    return next(errorHandler(400, "All Fields are Required"));
+  }
 
+  try {
+    const validUser = await User.findOne({ email });
+    if(!validUser){
+      return next(errorHandler(404, "Invalid Email"));
+    }
+    const validPassword = bcryptjs.compareSync(password, validUser.password);
+    if(!validPassword){
+      return next(errorHandler(400, "Invalid Password"));
+    }
+    const token = jwt.sign({ id: validUser._id }, process.env.jwt_secretkey);
+
+    //this line of code grabs everything except the password, we don't want to send password back
+    const { password: paxxword, ...rest } = validUser._doc;
+
+    res.status(200).cookie('access_token', token, {httpOnly: true}).json(rest);
+  } catch (error) {
+    next(error);
+  }
 }
