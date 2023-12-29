@@ -1,5 +1,5 @@
 import { Alert, Button, Label, TextInput, Spinner } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'   
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'
@@ -9,9 +9,19 @@ export default function SignIn() {
   const [formData, setFormData] = useState({})
   //const [errorMessage, setErrorMessage] = useState(null);
   //let [loading, setLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { loading, error: errorMessage } = useSelector(state => state.user);
+
+  useEffect(() => {
+    if (showError) {
+      const timeoutId = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [showError]);
 
   const handleChange = (event) => {
     setFormData({...formData, [event.target.id]: event.target.value.trim()});
@@ -21,6 +31,7 @@ export default function SignIn() {
     event.preventDefault();
     if(!formData.password || !formData.email){
       //return setErrorMessage("Please fill out all fields");
+      setShowError(true);
       return dispatch(signInFailure("Please fill out all fields"));
     }
     try {
@@ -32,18 +43,17 @@ export default function SignIn() {
       });
       const data = await response.json();
       if(data.success === false){
-        //setLoading(false);
-        //return setErrorMessage(data.message);
+        setShowError(true);
         dispatch(signInFailure(data.message));
       }
-      //setLoading(false);
+      
       if(response.ok){
+        setShowError(false);
         dispatch(signInSuccess(data));
         navigate('/');
       }
     } catch (error) {
-      //setErrorMessage(error.message);
-      //setLoading(false)
+      setShowError(true);
       dispatch(signInFailure(error.message))
     }
   }
@@ -90,7 +100,7 @@ export default function SignIn() {
             <Link to="/sign-up" className='text-blue-500'>Sign Up</Link>
           </div>
           {
-            errorMessage && (
+            showError && (
               <Alert className='mt-5' color="failure">
                 {errorMessage}
               </Alert>
