@@ -40,7 +40,7 @@ export const signin = async (req, res, next) => {
     if(!validPassword){
       return next(errorHandler(400, "Invalid Password"));
     }
-    const token = jwt.sign({ id: validUser._id }, process.env.jwt_secretkey);
+    const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin }, process.env.jwt_secretkey);
 
     //this line of code grabs everything except the password, we don't want to send password back
     const { password: paxxword, ...rest } = validUser._doc;
@@ -56,7 +56,7 @@ export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({email});
     if(user){
-      const token = jwt.sign({id: user._id}, process.env.jwt_secretkey);
+      const token = jwt.sign({id: user._id, isAdmin: user.isAdmin}, process.env.jwt_secretkey);
       const { password, ...rest } = user._doc;
       res.status(200).cookie("access_token", token, {
         httpOnly: true,
@@ -70,7 +70,7 @@ export const google = async (req, res, next) => {
         photoURL: photoURL
       });
       await newUser.save();
-      const token = jwt.sign({id: newUser._id}, process.env.jwt_secretkey);
+      const token = jwt.sign({id: newUser._id, isAdmin: newUser.isAdmin}, process.env.jwt_secretkey);
       const { password, ...rest } = newUser._doc;
       res.status(200).cookie('access_token', token, {
         httpOnly: true
