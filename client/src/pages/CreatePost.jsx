@@ -74,7 +74,6 @@ export default function CreatePost() {
         },
         body: JSON.stringify(formData)
       });
-      console.log("res", res);
       const data = await res.json();
       
       if(!res.ok) {
