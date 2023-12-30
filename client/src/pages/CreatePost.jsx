@@ -74,14 +74,15 @@ export default function CreatePost() {
         },
         body: JSON.stringify(formData)
       });
+      console.log("res", res);
       const data = await res.json();
       
       if(!res.ok) {
         setPublishError(data.message);
-        navigate('/post/' + data.slug);
         return;
       }
       setPublishError(null);
+      navigate('/post/' + data.slug);
     } catch (error) {
       setPublishError("Something went wrong");
     }
