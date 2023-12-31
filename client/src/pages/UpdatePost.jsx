@@ -18,7 +18,7 @@ export default function UpdatePost() {
   const [formData, setFormData] = useState({});
   const [ populateAfterDelay, setPopulateAfterDelay ] = useState(false);
   const navigate = useNavigate();
-  const { currentUser_id } = useSelector(state => state.user);
+  const { currentUser } = useSelector(state => state.user);
   const { postId } = useParams();
 
   const delay = (ms) => {
@@ -96,7 +96,7 @@ export default function UpdatePost() {
   const handleOnSubmit = async (e) => { 
     e.preventDefault();
     try {
-      const res = await fetch(`/api/post/update/${formData._id}/${currentUser_id}`, {
+      const res = await fetch(`/api/post/updatepost/${formData._id}/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -161,7 +161,7 @@ export default function UpdatePost() {
                   <img src={formData.image} alt='uploaded image' className='max-w-full object-cover' />
                 )
               }
-              <ReactQuill onChange={(value) => setFormData({...formData, content: value})} theme="snow" placeholder='Write something' className='h-72 mb-12' required value={formData?.content} />;
+              <ReactQuill onChange={(value) => setFormData({...formData, content: value})} theme="snow" placeholder='Write something' className='h-72 mb-12' required value={formData?.content} />
               <Button type='submit' className='bg-teal-500 hover:bg-teal-600 text-white' size="sm">
                 Update Post
               </Button>

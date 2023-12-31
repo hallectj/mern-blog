@@ -13,22 +13,24 @@ export default function DashPost() {
   const [postIdToDelete, setPostIdToDelete] = useState('');
 
   useEffect(() => { 
-    try {
-      const fetchPosts = async () => {
+    const fetchPosts = async () => {
+      try {
         const res = await fetch('/api/post/getposts?userId=' + currentUser._id)
         const data = await res.json()
+        
         if(res.ok) {
           setUserPosts(data.posts);
           if(data.posts.length < 9){
             setShowMore(false);
           }
         }
+      } catch (error) {
+        console.log(error);
       }
-      if(currentUser.isAdmin){
-        fetchPosts();
-      }
-    } catch (error) {
-      console.log(error);
+    }
+
+    if(currentUser.isAdmin){
+      fetchPosts();
     }
   }, [currentUser._id])
 
@@ -92,7 +94,7 @@ export default function DashPost() {
                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <Table.Cell>{new Date(post.updatedAt).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>
-                    <Link to={`/post/${post._id}`}>
+                    <Link to={`/post/${post.slug}`}>
                       <img className='w-20 h-10 object-cover bg-gray-500' src={post.image} alt={post.title} />
                     </Link>
                   </Table.Cell>

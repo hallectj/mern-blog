@@ -124,7 +124,7 @@ export default function CreatePost() {
             <img src={formData.image} alt='uploaded image' className='max-w-full object-cover' />
           )
         }
-        <ReactQuill onChange={(value) => setFormData({...formData, content: value})} theme="snow" placeholder='Write something' className='h-72 mb-12' required />;
+        <ReactQuill onChange={(value) => setFormData({...formData, content: value})} theme="snow" placeholder='Write something' className='h-72 mb-12' required />
         <Button type='submit' className='bg-teal-500 hover:bg-teal-600 text-white' size="sm">
           Publish
         </Button>
