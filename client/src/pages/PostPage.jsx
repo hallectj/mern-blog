@@ -3,6 +3,7 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import CallToAction from '../components/CallToAction';
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -60,6 +61,15 @@ export default function PostPage() {
       </div>
       <div className='p-3 max-w-2xl mx-auto w-full post-content' dangerouslySetInnerHTML={{__html: post && post.content}}>
 
+      </div>
+
+      <div className='max-w-4xl mx-auto w-full'>
+      <CallToAction
+        imgSrc='https://i.ytimg.com/vi/jS4aFq5-91M/maxresdefault.jpg'
+        heading='Learn more about JavaScript'
+        paragraph='Checkout these resources with 100 JavaScript projects'
+        link='https://www.google.com'
+      />
       </div>
     </main>
   )
