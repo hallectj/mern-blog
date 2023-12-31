@@ -12,6 +12,32 @@ body{
   font-size: 1.05rem;
 }
 
+.dark .ql-snow,
+.dark .ql-stroke {
+  fill: none;
+  stroke: white;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.dark .ql-picker-label::before{
+  color: white
+}
+
+.light .ql-picker-label::before{
+  color: rgb(73, 149, 199);
+}
+
+.light .ql-snow,
+.light .ql-stroke {
+  fill: none;
+  stroke: rgb(73, 149, 199);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
 .post-content{
   font-family: 'Roboto', sans-serif;
   font-size: 1rem;

@@ -17,21 +17,21 @@ export default function Header() {
     dispatch(toggleTheme())
   }
 
-  const handleSignout = async () => { 
+  const handleSignout = async () => {
     try {
-      const res = await fetch('api/user/signout', {
-        method: 'POST'
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
       });
       const data = await res.json();
-      if(!res.ok){
-        return;
-      }else{
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
         dispatch(signoutSuccess());
       }
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   return (
     <Navbar className='border-b-2'>

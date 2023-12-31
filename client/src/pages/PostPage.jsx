@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import CallToAction from '../components/CallToAction';
+import CommentSection from '../components/commentSection';
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -71,6 +72,7 @@ export default function PostPage() {
         link='https://www.google.com'
       />
       </div>
+      <CommentSection postId={post._id} />
     </main>
   )
 }
