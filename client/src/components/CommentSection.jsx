@@ -27,7 +27,27 @@ export default function CommentSection({postId}) {
     fetchComments();
   }, [postId]);
 
+  const handleEdit = async (comment, editedContent) => {
+    setComments(comments.map((c) => {
+      if(c._id === comment._id){
+        return {
+          ...c,
+          content: editedContent,
+        }
+      }
+      return c;
+    }));
+  }
 
+  const handleDelete = async (commentId) => {
+    const commentIdx = comments.findIndex((c) => c._id === commentId);
+    if(commentIdx === -1) return;
+    
+    comments.splice(commentIdx, 1);
+    setComments([...comments]);
+  }
+
+  
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
@@ -127,7 +147,7 @@ export default function CommentSection({postId}) {
           {
             comments.map((comment) => {
               return (
-                <Comment key={comment._id} comment={comment} onLike={handleLike} />
+                <Comment key={comment._id} comment={comment} onEdit={handleEdit} onDelete={handleDelete} onLike={handleLike} />
               )
             })
           }
