@@ -44,7 +44,7 @@ export default function UpdatePost() {
       }
       fetchPost();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   }, [postId])
 
