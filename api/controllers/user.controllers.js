@@ -107,3 +107,17 @@ export const getUser = async (req, res, next) => {
     next(error);
   }
 }
+
+export const getLimitedUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if(!user){
+      return next(errorHandler(404, "User not found"));
+    }
+
+    const { username, photoURL } = user._doc;
+    res.status(200).json({username, photoURL});
+  } catch (error) {
+    next(error);
+  }
+}
