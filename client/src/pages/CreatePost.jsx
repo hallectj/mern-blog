@@ -8,6 +8,8 @@ import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
+import { addCategory, removeCategory } from '../redux/site/categorySlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function CreatePost() {
   const [value, setValue] = useState('');
@@ -16,8 +18,27 @@ export default function CreatePost() {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [publishError, setPublishError] = useState(null);
   const [formData, setFormData] = useState({});
+  const [newCategory, setNewCategory] = useState('');
 
+
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categories);
   const navigate = useNavigate();
+
+  const handleAddCategory = () => {
+    if (newCategory.trim() !== '') {
+      dispatch(addCategory(newCategory));
+      setNewCategory('');
+    }
+  };
+
+  const handleRemoveCategory = () => {
+    const delCategory = formData.category;
+    if(delCategory){
+      dispatch(removeCategory(delCategory));
+    }
+    
+  };
 
   const onFile = (e) => {
     const file = e.target.files[0];
@@ -91,16 +112,28 @@ export default function CreatePost() {
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
       <form className='flex flex-col gap-4' onSubmit={handleOnSubmit}>
-        <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-          <TextInput type='text' onChange={ (e) => setFormData({...formData, title: e.target.value })} className='flex-1' placeholder='Title Required' id="title" required />
-          <Select onChange={ (e) => setFormData({...formData, category: e.target.value })} >
-            <option value="uncategorized">Select a category</option>
-            <option value="javascript">JavaScript</option>
-            <option value="react">React</option>
-            <option value="node">Node</option>
-            <option value="python">Python</option>
-            <option value="reactjs">ReactJS</option> 
-          </Select>
+        <div className='gap-4 border-4 mb-4 border-teal-500 border-dotted p-3'>
+          <div className='flex w-full gap-4 mb-4'>
+            <div className='flex-1'>
+              <TextInput type='text' onChange={ (e) => setFormData({...formData, title: e.target.value })} placeholder='Title Required' id="title" required />
+            </div>
+            <div className='flex-1'>
+              <Select onChange={ (e) => setFormData({...formData, category: e.target.value })} >
+                <option value="Uncategorized">Uncategorized</option>
+              {
+                categories.map((category) => (<option key={category} value={category}>{category}</option>))
+              }
+              </Select>
+            </div>
+            <div className='flex-2'>
+              <Button type='button' onClick={handleRemoveCategory} outline>Remove Category</Button>
+            </div>
+          </div>
+          
+          <div className='flex w-full gap-4'>
+            <div className='flex-1'><TextInput type='text' value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder='Add Category' /></div>
+            <div className='flex-2'><Button onClick={handleAddCategory} outline>Add Category</Button></div>
+          </div>
         </div>
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
           <FileInput type='file' accept='image/*' onChange={onFile} />

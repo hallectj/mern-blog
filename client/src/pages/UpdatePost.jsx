@@ -7,8 +7,9 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css';
-import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { addCategory, removeCategory } from '../redux/site/categorySlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function UpdatePost() {
   const [file, setFile] = useState(null);
@@ -20,10 +21,29 @@ export default function UpdatePost() {
   const navigate = useNavigate();
   const { currentUser } = useSelector(state => state.user);
   const { postId } = useParams();
+  const [newCategory, setNewCategory] = useState('');
+
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categories);
 
   const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
+  const handleAddCategory = () => {
+    if (newCategory.trim() !== '') {
+      dispatch(addCategory(newCategory));
+      setNewCategory('');
+    }
+  };
+
+  const handleRemoveCategory = () => {
+    const delCategory = formData.category;
+    if(delCategory){
+      dispatch(removeCategory(delCategory));
+    }
+    
+  };
 
   useEffect(() => {
     try {
@@ -127,53 +147,65 @@ export default function UpdatePost() {
         )
       }
       {populateAfterDelay && (
-          <form className='flex flex-col gap-4' onSubmit={handleOnSubmit}>
-              <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-                <TextInput type='text' onChange={ (e) => setFormData({...formData, title: e.target.value })} className='flex-1' placeholder='Title Required' id="title" required value={formData?.title} />
-                <Select onChange={ (e) => setFormData({...formData, category: e.target.value })} value={formData?.category} >
-                  <option value="uncategorized">Select a category</option>
-                  <option value="javascript">JavaScript</option>
-                  <option value="react">React</option>
-                  <option value="node">Node</option>
-                  <option value="python">Python</option>
-                  <option value="reactjs">ReactJS</option> 
-                </Select>
-              </div>
-              <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
-                <FileInput type='file' accept='image/*' onChange={onFile} />
-                <Button type='button' onClick={handleUploadPostImage} className='bg-teal-500 hover:bg-teal-600 text-white' outline size="sm" disabled={uploadFileProgress}>
-                  {
-                    uploadFileProgress ? (
-                      <div className='h-16 w-16'>
-                        <CircularProgressbar value={uploadFileProgress} text={`${uploadFileProgress}%`} />
-                      </div>
-                    ) : 'Upload Image'
-                  }
-                </Button>
-              </div>
-              {imageUploadError && (
-                <Alert type='danger' color="failure" className='mt-4'>
-                  {imageUploadError}
-                </Alert>
-              )}
+      <form className='flex flex-col gap-4' onSubmit={handleOnSubmit}>
+        <div className='gap-4 border-4 mb-4 border-teal-500 border-dotted p-3'>
+          <div className='flex w-full gap-4 mb-4'>
+            <div className='flex-1'>
+              <TextInput type='text' onChange={ (e) => setFormData({...formData, title: e.target.value })} placeholder='Title Required' id="title" required value={formData?.title} />
+            </div>
+            <div className='flex-1'>
+              <Select onChange={ (e) => setFormData({...formData, category: e.target.value })} value={formData?.category} >
+                <option value="Uncategorized">Uncategorized</option>
               {
-                formData.image && (
-                  <img src={formData.image} alt='uploaded image' className='max-w-full object-cover' />
-                )
+                categories.map((category) => (<option key={category} value={category}>{category}</option>))
               }
-              <ReactQuill onChange={(value) => setFormData({...formData, content: value})} theme="snow" placeholder='Write something' className='h-72 mb-12' required value={formData?.content} />
-              <Button type='submit' className='bg-teal-500 hover:bg-teal-600 text-white' size="sm">
-                Update Post
-              </Button>
-              {
-                publishError && (
-                  <Alert type='danger' color="failure" className='mt-4'>
-                    {publishError}
-                  </Alert>
-                )
-              }
-            </form>
-      )}
+              </Select>
+            </div>
+            <div className='flex-2'>
+              <Button type='button' onClick={handleRemoveCategory} outline>Remove Category</Button>
+            </div>
+          </div>
+        
+          <div className='flex w-full gap-4'>
+            <div className='flex-1'><TextInput type='text' value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder='Add Category' /></div>
+            <div className='flex-2'><Button onClick={handleAddCategory} outline>Add Category</Button></div>
+          </div>
+        </div>
+        <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
+          <FileInput type='file' accept='image/*' onChange={onFile} />
+          <Button type='button' onClick={handleUploadPostImage} className='bg-teal-500 hover:bg-teal-600 text-white' outline size="sm" disabled={uploadFileProgress}>
+            {
+              uploadFileProgress ? (
+                <div className='h-16 w-16'>
+                  <CircularProgressbar value={uploadFileProgress} text={`${uploadFileProgress}%`} />
+                </div>
+              ) : 'Upload Image'
+            }
+          </Button>
+        </div>
+        {imageUploadError && (
+          <Alert type='danger' color="failure" className='mt-4'>
+            {imageUploadError}
+          </Alert>
+        )}
+        {
+          formData.image && (
+            <img src={formData.image} alt='uploaded image' className='max-w-full object-cover' />
+          )
+        }
+        <ReactQuill onChange={(value) => setFormData({...formData, content: value})} theme="snow" placeholder='Write something' className='h-72 mb-12' required value={formData?.content} />
+        <Button type='submit' className='bg-teal-500 hover:bg-teal-600 text-white' size="sm">
+          Update Post
+        </Button>
+        {
+          publishError && (
+            <Alert type='danger' color="failure" className='mt-4'>
+              {publishError}
+            </Alert>
+          )
+        }
+      </form>
+        )}
     </div>
   )
 }
