@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import CallToAction from '../components/CallToAction';
-import CommentSection from '../components/commentSection';
+import CommentSection from '../components/CommentSection';
 import PostCard from '../components/PostCard';
 import ReactLogo from '../assets/ReactLogo.png';
 
