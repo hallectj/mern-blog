@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import CallToAction from '../components/CallToAction';
 import PostCard from '../components/PostCard';
+import ReactLogo from '../assets/ReactLogo.png';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -25,17 +26,17 @@ export default function Home() {
     <div>
       <div className='flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto'>
         <h1 className='text-3xl font-bold lg:text-6xl'>Welcome to my Blog</h1>
-        <p className='text-gray-500 text-xs sm:text-sm'>Here you will find articles on Dogs and the crazy and wonderful things they do.  If you are a dog lover like me, you will love this site.  See you around.</p>
+        <p className='text-gray-500 text-xs sm:text-sm'>This is a test website built with React, Redux, MongoDb, NodeJS and Express. Articles are largely dummy articles.</p>
         <Link to='/search' className='text-xs sm:text-sm text-teal-500 font-bold hover:underline'>
           View All Articles
         </Link>
       </div>
 
-      <div className='p-3 bg-amber-100 dark:bg-slate-700'>
+      <div className='p-3 bg-amber-100 dark:bg-slate-700 ml-5 mr-5'>
         <CallToAction
-          imgSrc='https://i.ytimg.com/vi/jS4aFq5-91M/maxresdefault.jpg'
-          heading='Learn more about JavaScript'
-          paragraph='Checkout these resources with 100 JavaScript projects'
+          imgSrc={ReactLogo}
+          heading='Ad Heading Would Go Here'
+          paragraph='Call to Action paragraph would go here.'
           link='https://www.google.com'
         />
       </div>

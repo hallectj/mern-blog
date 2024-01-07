@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import CallToAction from '../components/CallToAction';
 import CommentSection from '../components/commentSection';
 import PostCard from '../components/PostCard';
+import ReactLogo from '../assets/ReactLogo.png';
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -87,9 +88,9 @@ export default function PostPage() {
 
             <div className='max-w-4xl mx-auto w-full'>
               <CallToAction
-                imgSrc='https://i.ytimg.com/vi/jS4aFq5-91M/maxresdefault.jpg'
-                heading='Learn more about JavaScript'
-                paragraph='Checkout these resources with 100 JavaScript projects'
+                imgSrc={ReactLogo}
+                heading='Ad Heading Would Go Here'
+                paragraph='Call to Action paragraph would go here.'
                 link='https://www.google.com'
               />
             </div>
