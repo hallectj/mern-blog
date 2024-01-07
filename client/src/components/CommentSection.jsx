@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import Comment from './comment';
+import Comment from './Comment';
 
 export default function CommentSection({postId}) {
   const { currentUser } = useSelector(state => state.user);
